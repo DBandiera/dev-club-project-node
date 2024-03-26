@@ -1,10 +1,11 @@
 const express = require('express')
 const uuid = require('uuid')
+const cors = require('cors')
 
 const port = 3001
 const app = express()
 app.use(express.json())
-
+app.use(cors())
 
 
 // app.use = (( request, response, next) => {
@@ -68,13 +69,6 @@ app.put('/orders/:id', checkOrderId, moduleUrl, (request, response) => {
     return response.json(updateOrder)
 })
 
-app.delete('/orders/:id', checkOrderId, moduleUrl, (request, response) => {
-    const index = request.orderIndex
-    
-    orders.splice(index, 1)
-    
-    return response.status(204).json()
-})
 
 app.get('/orders/:id', checkOrderId, moduleUrl, (request, response) => {
     const index =  request.orderShippingIndex
@@ -88,7 +82,12 @@ app.patch('/orders/:id', checkOrderId, moduleUrl, (request, response) => {
     return response.json(orders[index])
 })
 
-
+app.delete('/orders/:id', checkOrderId, (request, response) => {
+    const index = request.orderShippingIndex    
+    orders.splice(index, 1)
+    
+    return response.status(204).json()
+})
 
 app.listen(port, () => {
     console.log(`🛰 Server started on port ${port}`)
